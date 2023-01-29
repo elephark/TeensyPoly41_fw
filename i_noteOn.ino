@@ -7,10 +7,10 @@ bool voiceOrder_Add(uint8_t whichVoice) {
     voices++;
 
     // lol debug
-//    Serial.println(str + "voiceOrder_Add(" + whichVoice + ")");
-//    Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + ", 
-//        " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
-//    Serial.println(str + "voices = " + voices);
+   Serial.println(str + "voiceOrder_Add(" + whichVoice + ")");
+   Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + 
+       ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
+   Serial.println(str + "voices = " + voices);
     
     return true;
   }
@@ -31,10 +31,10 @@ bool voiceOrder_Remove(uint8_t whichVoice) {
         voiceOrder[NUM_VOICES - 1] = whichVoice;
         voices--;
 //        retVal = true;
-//        Serial.println(str + "voiceOrder_Remove(" + whichVoice + ")");
-//        Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + ", 
-//            " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
-//        Serial.println(str + "voices = " + voices);
+       Serial.println(str + "voiceOrder_Remove(" + whichVoice + ")");
+       Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + 
+          ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
+       Serial.println(str + "voices = " + voices);
         return true;
       }
     }
@@ -62,7 +62,11 @@ void doNoteOn(uint8_t v, byte note) {
   voice[v].filterEnv.noteOn();
   voice[v].lfoAenv.noteOn();
   voice[v].envOn = true;
-  voiceOrder_Add(v);
+
+  if (!(vs.isMonophonic)) {
+    voiceOrder_Add(v);
+  }
+  
 
   #else // YAY_ARRAYS is not defined
   
@@ -201,7 +205,10 @@ void doNoteOff(uint8_t v) {
   voice[v].filterEnv.noteOff();
   voice[v].lfoAenv.noteOff();
   voice[v].envOn = false;
-  voiceOrder_Remove(v);
+  if (!(vs.isMonophonic)) {
+    voiceOrder_Remove(v);
+  }
+  
 
   #else // YAY_ARRAYS is not defined
   
