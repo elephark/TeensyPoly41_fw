@@ -16,7 +16,7 @@ void loop() {
     voice[v].modMix.gain(0, vs.crossMod);
 
     // voice frequencies
-    // lol note1freq, make sure this is handled properly
+    // todo: pitchBend should be ignored (ie frozen in place) for voices in release stage
     voice[v].vcoA.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * pitchBend);
     voice[v].vcoB.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * vs.octaveB * vs.tuneB * pitchBend);
     voice[v].vcoC.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * vs.octaveC * vs.tuneC * pitchBend);
