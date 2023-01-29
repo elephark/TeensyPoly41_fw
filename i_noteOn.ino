@@ -8,7 +8,8 @@ bool voiceOrder_Add(uint8_t whichVoice) {
 
     // lol debug
 //    Serial.println(str + "voiceOrder_Add(" + whichVoice + ")");
-//    Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
+//    Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + ", 
+//        " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
 //    Serial.println(str + "voices = " + voices);
     
     return true;
@@ -31,7 +32,8 @@ bool voiceOrder_Remove(uint8_t whichVoice) {
         voices--;
 //        retVal = true;
 //        Serial.println(str + "voiceOrder_Remove(" + whichVoice + ")");
-//        Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
+//        Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + ", 
+//            " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
 //        Serial.println(str + "voices = " + voices);
         return true;
       }
@@ -64,56 +66,56 @@ void doNoteOn(uint8_t v, byte note) {
 
   #else // YAY_ARRAYS is not defined
   
-  if (voice == 0) {
-    note1freq = note;
-    env1.noteOn();
-    filterEnv1.noteOn();
-    lfoAenv1.noteOn();
-    env1on = true;
-    voiceOrder_Add(0);
-  } else if (voice == 1) {
-    note2freq = note;
-    env2.noteOn();
-    filterEnv2.noteOn();
-    lfoAenv2.noteOn();
-    env2on = true;
-    voiceOrder_Add(1);
-  } else if (voice == 2) {
-    note3freq = note;
-    env3.noteOn();
-    filterEnv3.noteOn();
-    lfoAenv3.noteOn();
-    env3on = true;
-    voiceOrder_Add(2);
-  } else if (voice == 3) {
-    note4freq = note;
-    env4.noteOn();
-    filterEnv4.noteOn();
-    lfoAenv4.noteOn();
-    env4on = true;
-    voiceOrder_Add(3);
-  } else if (voice == 4) {
-    note5freq = note;
-    env5.noteOn();
-    filterEnv5.noteOn();
-    lfoAenv5.noteOn();
-    env5on = true;
-    voiceOrder_Add(4);
-  } else if (voice == 5) {
-    note6freq = note;
-    env6.noteOn();
-    filterEnv6.noteOn();
-    lfoAenv6.noteOn();
-    env6on = true;
-    voiceOrder_Add(5);
-  }
+  // if (voice == 0) {
+  //   note1freq = note;
+  //   env1.noteOn();
+  //   filterEnv1.noteOn();
+  //   lfoAenv1.noteOn();
+  //   env1on = true;
+  //   voiceOrder_Add(0);
+  // } else if (voice == 1) {
+  //   note2freq = note;
+  //   env2.noteOn();
+  //   filterEnv2.noteOn();
+  //   lfoAenv2.noteOn();
+  //   env2on = true;
+  //   voiceOrder_Add(1);
+  // } else if (voice == 2) {
+  //   note3freq = note;
+  //   env3.noteOn();
+  //   filterEnv3.noteOn();
+  //   lfoAenv3.noteOn();
+  //   env3on = true;
+  //   voiceOrder_Add(2);
+  // } else if (voice == 3) {
+  //   note4freq = note;
+  //   env4.noteOn();
+  //   filterEnv4.noteOn();
+  //   lfoAenv4.noteOn();
+  //   env4on = true;
+  //   voiceOrder_Add(3);
+  // } else if (voice == 4) {
+  //   note5freq = note;
+  //   env5.noteOn();
+  //   filterEnv5.noteOn();
+  //   lfoAenv5.noteOn();
+  //   env5on = true;
+  //   voiceOrder_Add(4);
+  // } else if (voice == 5) {
+  //   note6freq = note;
+  //   env6.noteOn();
+  //   filterEnv6.noteOn();
+  //   lfoAenv6.noteOn();
+  //   env6on = true;
+  //   voiceOrder_Add(5);
+  // }
 
   #endif
 }
 
 void myNoteOn(byte channel, byte note, byte velocity) {
-  // We only care about one channel.
-  if (channel != midiChannel) { return; }
+  // We only care about one channel. Also, reject invalid notes.
+  if ((channel != midiChannel) || (note > 127)) { return; }
 
   if (vs.isMonophonic == 0) { //POLYPHONIC mode
 //    AudioEffectEnvelope *tmpEnv[NUM_VOICES] = {&env1, &env2, &env3, &env4, &env5, &env6};
@@ -152,6 +154,36 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 
 
   } else if (vs.isMonophonic == 1) { //MONOPHONIC mode
+    // When we get a NoteOn, push it onto the top.
+    // todo: If the note already exists and it's the current note, restart the envelope.
+
+    // If there isn't a note already playing (ie stack empty), start the envelope.
+    if (monoSP == 0) {
+      monoStack[monoSP] = note;
+      monoSP++;
+      doNoteOn(0, note);
+    }
+
+    // If there's a note already playing, we just change the pitch, I guess. todo: portamento?
+    else { // monoSP >= MONO_STACK_SIZE
+      // If the stack is full, delete the oldest (or second-oldest?) entry and push the new note.
+      // todo: Second-oldest? Why? Because that lets the user plant one and goof around with the rest.
+      if (monoSP >= MONO_STACK_SIZE) {
+        // Delete the oldest by shifting everything.
+        for (uint8_t i = 0; i < (MONO_STACK_SIZE - 1); i++) {
+          monoStack[i] = monoStack[i + 1];
+        }
+        monoSP = MONO_STACK_SIZE - 1;
+      }
+      // Push the new note, etc.
+      monoStack[monoSP] = note;
+      monoSP++;
+      // Change the pitch
+      voice[0].noteFreq = note;
+    }
+
+
+    
 //    note1freq = note;
 //    env1.noteOn();
 //    filterEnv1.noteOn();
@@ -173,69 +205,102 @@ void doNoteOff(uint8_t v) {
 
   #else // YAY_ARRAYS is not defined
   
-  if (voice == 0) {
-    env1.noteOff();
-    filterEnv1.noteOff();
-    lfoAenv1.noteOff();
-    env1on = false;
-    voiceOrder_Remove(0);
-  }  if (voice == 1) {
-    env2.noteOff();
-    filterEnv2.noteOff();
-    lfoAenv2.noteOff();
-    env2on = false;
-    voiceOrder_Remove(1);
-  }  if (voice == 2) {
-    env3.noteOff();
-    filterEnv3.noteOff();
-    lfoAenv3.noteOff();
-    env3on = false;
-    voiceOrder_Remove(2);
-  }  if (voice == 3) {
-    env4.noteOff();
-    filterEnv4.noteOff();
-    lfoAenv4.noteOff();
-    env4on = false;
-    voiceOrder_Remove(3);
-  }  if (voice == 4) {
-    env5.noteOff();
-    filterEnv5.noteOff();
-    lfoAenv5.noteOff();
-    env5on = false;
-    voiceOrder_Remove(4);
-  }  if (voice == 5) {
-    env6.noteOff();
-    filterEnv6.noteOff();
-    lfoAenv6.noteOff();
-    env6on = false;
-    voiceOrder_Remove(5);
-  }
+  // if (voice == 0) {
+  //   env1.noteOff();
+  //   filterEnv1.noteOff();
+  //   lfoAenv1.noteOff();
+  //   env1on = false;
+  //   voiceOrder_Remove(0);
+  // }  if (voice == 1) {
+  //   env2.noteOff();
+  //   filterEnv2.noteOff();
+  //   lfoAenv2.noteOff();
+  //   env2on = false;
+  //   voiceOrder_Remove(1);
+  // }  if (voice == 2) {
+  //   env3.noteOff();
+  //   filterEnv3.noteOff();
+  //   lfoAenv3.noteOff();
+  //   env3on = false;
+  //   voiceOrder_Remove(2);
+  // }  if (voice == 3) {
+  //   env4.noteOff();
+  //   filterEnv4.noteOff();
+  //   lfoAenv4.noteOff();
+  //   env4on = false;
+  //   voiceOrder_Remove(3);
+  // }  if (voice == 4) {
+  //   env5.noteOff();
+  //   filterEnv5.noteOff();
+  //   lfoAenv5.noteOff();
+  //   env5on = false;
+  //   voiceOrder_Remove(4);
+  // }  if (voice == 5) {
+  //   env6.noteOff();
+  //   filterEnv6.noteOff();
+  //   lfoAenv6.noteOff();
+  //   env6on = false;
+  //   voiceOrder_Remove(5);
+  // }
 
   #endif
 }
 
 
 void myNoteOff(byte channel, byte note, byte velocity) {
-  // We only care about one channel.
-  if (channel != midiChannel) { return; }
+  // We only care about one channel. Also, reject invalid notes.
+  if ((channel != midiChannel) || (note > 127)) { return; }
   
   if (vs.isMonophonic == 0) { //POLYPHONIC mode
     switch (voices) {
-      case 1 ... 6:
+    case 1 ... 6:
 //        int freqs[NUM_VOICES] = {note1freq, note2freq, note3freq, note4freq, note5freq, note6freq}; 
-        for (uint8_t i = 0; i < voices; i++) { // look through voices in the order they're used
+      for (uint8_t i = 0; i < voices; i++) { // look through voices in the order they're used
 //          if (freqs[voiceOrder[i]] == note) {
-          if (voice[voiceOrder[i]].noteFreq == note) {
-            doNoteOff(voiceOrder[i]);
-          }
+        if (voice[voiceOrder[i]].noteFreq == note) {
+          doNoteOff(voiceOrder[i]);
         }
-        break;
+      }
+      break;
 
     }
 
 
 
   } else if (vs.isMonophonic == 1) { //MONOPHONIC mode
+    // Don't do anything if the stack is empty.
+    if (monoSP) {
+
+      // Remove all copies of the note.
+      // Go from right to left looking for the note.
+      for (int8_t i = (monoSP - 1); i >= 0; i--) {
+        // Oh, we found the note?
+        if (monoStack[i] == note) {
+          // Shift everything over (including SP) if we find one.
+          for (uint8_t j = i; j < (monoSP - 1); j++) {
+            monoStack[j] = monoStack[j + 1];
+          }
+          monoSP--;
+          // In principle this shouldn't be necessary, but just in case...
+          monoStack[monoSP] = MONO_OFF;
+        }
+      }
+
+      // If the stack is now empty, NoteOff the envelope(s).
+      if (!monoSP) {
+        doNoteOff(0);
+      } else {
+        // Otherwise, osc goes to the next pitch. Which could just be the current pitch, iunno. todo: portamento?
+        voice[0].noteFreq = monoStack[monoSP - 1];
+      }
+    }
+
+    // todo: Oh yeah. When we exit mono mode, clear the stack.
+    // Why all this safety? Because I've come across too many buggy synths and I also just finished reading a bunch of embedded safety stuff.
+    // Not that this application is safety-critical, but there's no good reason for it to be unreliable.
+
+
+
 //    if (note1freq == note) {
 //      env1.noteOff();
 //      filterEnv1.noteOff();

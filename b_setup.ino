@@ -85,6 +85,10 @@ void setup() {
   pinMode(ChSel8, INPUT_PULLUP);
 
 
+
+  // Initialize the stack we use to keep track of notes in monophonic mode.
+  for (uint8_t i = 0; i < MONO_STACK_SIZE; i++) { monoStack[i] = MONO_OFF; }
+
   //vco setup
 
 #ifdef YAY_ARRAYS

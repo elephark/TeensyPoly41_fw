@@ -490,7 +490,7 @@ bool memJustLoaded;
 uint8_t lastMemLoaded = 0;
 
 
-// MIDI channel selection
+// MIDI channel selection pins
 const int ChSel1 = 29;
 const int ChSel2 = 30;
 const int ChSel4 = 31;
@@ -529,7 +529,14 @@ const float noteFreqs[128] = {
 int voices;
 
 
+// For monophonic mode, we'll be doing last-note priority today.
+// To do this, we use a stack sorta thingy.
+#define MONO_STACK_SIZE 64 // How many notes can we stack?
+//uint8_t unisonVoiceCount = 1; // How many voices do we use in unison mode?
+const int8_t MONO_OFF = -1;
 
+int8_t monoStack[MONO_STACK_SIZE];
+int8_t monoSP = 0;
 
 
 //checks if notes are on or not
@@ -752,7 +759,7 @@ int revSizepot;
 int oldRevSizepot;
 
 
-
+// todo: move these to a separate file
 //28 WAVEFORMS
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 const int16_t wave1[257] = {
