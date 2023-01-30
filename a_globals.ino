@@ -113,6 +113,8 @@ class Voice {
 
 Voice voice[NUM_VOICES];
 
+// This is where we keep track of voice allocation in polyphonic mode.
+uint8_t voiceOrder[NUM_VOICES];
 
 #else // YAY_ARRAYS is not defined
 

@@ -85,6 +85,8 @@ void setup() {
   pinMode(ChSel8, INPUT_PULLUP);
 
 
+  // Initialize the array we use to allocate voices.
+  for (uint8_t i = 0; i < NUM_VOICES; i++) { voiceOrder[i] = i; }
 
   // Initialize the stack we use to keep track of notes in monophonic mode.
   for (uint8_t i = 0; i < MONO_STACK_SIZE; i++) { monoStack[i] = MONO_OFF; }

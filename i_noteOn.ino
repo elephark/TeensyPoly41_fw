@@ -1,5 +1,3 @@
-uint8_t voiceOrder[NUM_VOICES] = {0, 1, 2, 3, 4, 5, 6, 7}; // make sure this is initialized!
-
 bool voiceOrder_Add(uint8_t whichVoice) {
   // If we have room, add the requested voice to the end of the order.
   if (voices >= 0 && voices < NUM_VOICES) {
