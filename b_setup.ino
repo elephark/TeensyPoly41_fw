@@ -121,6 +121,10 @@ void setup() {
     voice[v].lfoA.begin(WAVEFORM_SINE);
     voice[v].lfoB.begin(0.5, 1, WAVEFORM_TRIANGLE);
 
+    // Let's go with phase modulation instead of frequency modulation.
+    // At least in this application, set up how it is, it seems to be more musical.
+    voice[v].vcoA.phaseModulation(1440);
+
     // LFO destination disconnect
     voice[v].patchCord2->disconnect(); //vcoA
     voice[v].patchCord3->disconnect(); //vcoB
