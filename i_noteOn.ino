@@ -125,7 +125,7 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 //    AudioEffectEnvelope *tmpEnv[NUM_VOICES] = {&env1, &env2, &env3, &env4, &env5, &env6};
 //    bool envOn[NUM_VOICES] = {env1on, env2on, env3on, env4on, env5on, env6on};
     switch (voices) {
-      case 0 ... 5: {
+      case 0 ... (NUM_VOICES - 1): {
         bool voiceAllocSuccess = false;
         for (uint8_t i = 0; (i < NUM_VOICES && voiceAllocSuccess == false); i++) {
 //          if (!(tmpEnv[voiceOrder[i]]->isActive())) {
@@ -171,7 +171,8 @@ void myNoteOn(byte channel, byte note, byte velocity) {
     // If there's a note already playing, we just change the pitch, I guess. todo: portamento?
     else { // monoSP >= MONO_STACK_SIZE
       // If the stack is full, delete the oldest (or second-oldest?) entry and push the new note.
-      // todo: Second-oldest? Why? Because that lets the user plant one and goof around with the rest.
+      // Second-oldest? Why? Because that lets the user plant one and goof around with the rest.
+      // On second thought, if MONO_STACK_SIZE is big enough, it doesn't practically matter.
       if (monoSP >= MONO_STACK_SIZE) {
         // Delete the oldest by shifting everything.
         for (uint8_t i = 0; i < (MONO_STACK_SIZE - 1); i++) {
@@ -258,9 +259,30 @@ void myNoteOff(byte channel, byte note, byte velocity) {
   // We only care about one channel. Also, reject invalid notes.
   if ((channel != midiChannel) || (note > 127)) { return; }
   
+  // Check for a special case: voiceOrder[] is missing one or more elements.
+  // This is Bad News. Proper and correct design would prevent it, but today we're just going to
+  // deal with the symptom rather than truly address it. Cool.
+  // bool resetVoiceOrder = false;
+  // for (uint8_t v = 0; ((v < NUM_VOICES) && (!resetVoiceOrder)); v++) {
+  //   bool foundVoice = false;
+  //   for (uint8_t e = 0; ((e < NUM_VOICES) && (!foundVoice)); e++) {
+  //     if (voiceOrder[e] == v) {
+  //       foundVoice = true;
+  //     }
+  //   }
+  //   if (!foundVoice) {
+  //     resetVoiceOrder = true;
+  //   }
+  // }
+  // if (resetVoiceOrder) {
+  //   for (uint8_t v = 0; v < NUM_VOICES; v++) {
+  //     voiceOrder[v] = v;
+  //   }
+  // }
+
   if (vs.isMonophonic == 0) { //POLYPHONIC mode
     switch (voices) {
-    case 1 ... 6:
+    case 1 ... NUM_VOICES:
 //        int freqs[NUM_VOICES] = {note1freq, note2freq, note3freq, note4freq, note5freq, note6freq}; 
       for (uint8_t i = 0; i < voices; i++) { // look through voices in the order they're used
 //          if (freqs[voiceOrder[i]] == note) {
