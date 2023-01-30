@@ -436,7 +436,9 @@ void muxRead() {
     if (btns[2]->fell()) {
 //      led[7] ^= 1;
 
-      dumpVoiceSettings();
+      // drop debug crap here ig
+      // dumpVoiceSettings();
+      Serial.println(str + "max = " + AudioMemoryUsageMax() + ", cur = " + AudioMemoryUsage());
     }
     
     

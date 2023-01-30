@@ -1,7 +1,11 @@
 void setup() {
   Serial.begin(9600);
   Serial.println("Serial port is up.");
-  AudioMemory(470);
+
+  // Let's reserve a block of memory for the audio engine.
+  // The highest usage I've seen so far is 484, but I'd rather have extra room than not enough.
+  // If it's too low, we'll start hearing glitches if the delay is set too long.
+  AudioMemory(1024);
 
   //Midi setup
 //  usbMIDI.begin();
