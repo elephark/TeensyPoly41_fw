@@ -96,9 +96,17 @@ void setup() {
 #ifdef YAY_ARRAYS
 
 //  Serial.println("Setting up with YAY_ARRAYS defined...");
+  
+  // Hook up the mixers
+  for (uint8_t m = 0; m < NUM_MIXERS; m++) {
+    finalMixPatchCord[m] = new AudioConnection(mix[m], 0, finalMix, m);
+  }
 
   // The following loop should replace (most of) the stuff below it. lol
   for (uint8_t v = 0; v < NUM_VOICES; v++) {
+    // Connect each voice output to its respective mixer4
+    voiceOutPatchCord[v] = new AudioConnection(voice[v].voiceOut, 0, mix[v / 4], (v % 4));
+
     voice[v].vcoA.begin(vcoVol, 150, WAVEFORM_SAWTOOTH);
     voice[v].vcoB.begin(vcoVol, 150, WAVEFORM_SQUARE);
     voice[v].vcoC.begin(vcoVol * 1.5, 150, WAVEFORM_ARBITRARY);
@@ -116,6 +124,8 @@ void setup() {
     voice[v].patchCord5->disconnect(); //sub
     voice[v].patchCord6->disconnect(); //filter
 //    voice[v].patchCord125->disconnect(); // amp
+
+
   }
 
  #else // YAY_ARRAYS is not defined

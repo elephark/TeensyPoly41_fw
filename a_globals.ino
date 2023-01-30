@@ -7,10 +7,20 @@
 #include <Math.h>
 
 
-#define NUM_VOICES      8
+// How many voices does this synth have?
+#define NUM_VOICES      16
+// How many indicator LEDs are we working with?
 #define NUM_LEDS        8
+// How many buttons are there?
 #define NUM_BUTTONS     8
 
+// We mix things down with AudioMixer4 units. To make sure we have enough, we have to deal with
+// the silliness of integer division. We might have to do something similar again if we go to
+// more than 16 voices.
+#define NUM_MIXERS      ((NUM_VOICES + 3) / 4)
+
+
+// We're using arrays instead of doing everything by hand, yeah boyeeeee
 #define YAY_ARRAYS
 
 #ifdef YAY_ARRAYS
@@ -214,8 +224,11 @@ AudioEffectEnvelope      env6; //xy=1344.5433197021484,1480.0191011428833
 
 
 AudioAnalyzeRMS          lfoAread1;           //xy=320.53334045410156,248.9333620071411
-AudioMixer4              mix1; //xy=1670.9339637756348,785.7668323516846
-AudioMixer4              mix2; //xy=1670.9338912963867,917.7668380737305
+AudioMixer4              mix[NUM_MIXERS];
+// AudioMixer4              mix1; //xy=1670.9339637756348,785.7668323516846
+// AudioMixer4              mix2; //xy=1670.9338912963867,917.7668380737305
+// AudioMixer4              mix3;
+// AudioMixer4              mix4;
 AudioMixer4              finalMix; //xy=1795.9338989257812,854.7668190002441
 AudioFilterStateVariable dlyFiltR; //xy=2003.8004722595215,1181.3002490997314
 AudioFilterStateVariable dlyFiltL;        //xy=2015.1337928771973,942.633547782898
@@ -355,17 +368,24 @@ AudioOutputI2S           i2s1;           //xy=2549.5332946777344,853.26665496826
 //AudioConnection          patchCord126(filterMode5, env5);
 //AudioConnection          patchCord127(filterMode6, env6);
 AudioConnection          patchCord12(voice[0].lfoAenv, lfoAread1);
-AudioConnection          patchCord128(voice[0].voiceOut, 0, mix1, 0);
-AudioConnection          patchCord129(voice[1].voiceOut, 0, mix1, 1);
-AudioConnection          patchCord130(voice[2].voiceOut, 0, mix1, 2);
-AudioConnection          patchCord131(voice[3].voiceOut, 0, mix1, 3);
-AudioConnection          patchCord132(voice[4].voiceOut, 0, mix2, 0);
-AudioConnection          patchCord133(voice[5].voiceOut, 0, mix2, 1);
-AudioConnection          patchCord153(voice[6].voiceOut, 0, mix2, 2);
-AudioConnection          patchCord154(voice[7].voiceOut, 0, mix2, 3);
 
-AudioConnection          patchCord134(mix1, 0, finalMix, 0);
-AudioConnection          patchCord135(mix2, 0, finalMix, 1);
+AudioConnection*         voiceOutPatchCord[NUM_VOICES];
+// AudioConnection          patchCord128(voice[0].voiceOut, 0, mix1, 0);
+// AudioConnection          patchCord129(voice[1].voiceOut, 0, mix1, 1);
+// AudioConnection          patchCord130(voice[2].voiceOut, 0, mix1, 2);
+// AudioConnection          patchCord131(voice[3].voiceOut, 0, mix1, 3);
+// AudioConnection          patchCord132(voice[4].voiceOut, 0, mix2, 0);
+// AudioConnection          patchCord133(voice[5].voiceOut, 0, mix2, 1);
+// AudioConnection          patchCord153(voice[6].voiceOut, 0, mix2, 2);
+// AudioConnection          patchCord154(voice[7].voiceOut, 0, mix2, 3);
+
+AudioConnection*         finalMixPatchCord[NUM_MIXERS];
+// AudioConnection          patchCord134(mix1, 0, finalMix, 0);
+// AudioConnection          patchCord135(mix2, 0, finalMix, 1);
+// AudioConnection          patchCord135(mix3, 0, finalMix, 2);
+// AudioConnection          patchCord135(mix4, 0, finalMix, 3);
+
+
 AudioConnection          patchCord136(finalMix, 0, fxL, 0);
 AudioConnection          patchCord137(finalMix, reverb);
 AudioConnection          patchCord138(finalMix, 0, fxR, 0);
