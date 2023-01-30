@@ -1,4 +1,4 @@
-uint8_t voiceOrder[NUM_VOICES] = {0, 1, 2, 3, 4, 5}; // make sure this is initialized!
+uint8_t voiceOrder[NUM_VOICES] = {0, 1, 2, 3, 4, 5, 6, 7}; // make sure this is initialized!
 
 bool voiceOrder_Add(uint8_t whichVoice) {
   // If we have room, add the requested voice to the end of the order.
@@ -9,7 +9,7 @@ bool voiceOrder_Add(uint8_t whichVoice) {
     // lol debug
    Serial.println(str + "voiceOrder_Add(" + whichVoice + ")");
    Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + 
-       ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
+       ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + ", " + voiceOrder[6] + ", " + voiceOrder[7] + "}");
    Serial.println(str + "voices = " + voices);
     
     return true;
@@ -33,7 +33,7 @@ bool voiceOrder_Remove(uint8_t whichVoice) {
 //        retVal = true;
        Serial.println(str + "voiceOrder_Remove(" + whichVoice + ")");
        Serial.println(str + "voiceOrder[] = {" + voiceOrder[0] + ", " + voiceOrder[1] + ", " + voiceOrder[2] + 
-          ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + "}");
+          ", " + voiceOrder[3] + ", " + voiceOrder[4] + ", " + voiceOrder[5] + ", " + voiceOrder[6] + ", " + voiceOrder[7] + "}");
        Serial.println(str + "voices = " + voices);
         return true;
       }
@@ -148,7 +148,7 @@ void myNoteOn(byte channel, byte note, byte velocity) {
         }
         break;
       }
-      case 6: {
+      case NUM_VOICES: {
       Serial.println(str + "case " + voices);
         uint8_t newVoice = voiceOrder_Steal();
         doNoteOn(newVoice, note);

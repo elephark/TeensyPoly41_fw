@@ -7,7 +7,7 @@
 #include <Math.h>
 
 
-#define NUM_VOICES      6
+#define NUM_VOICES      8
 #define NUM_LEDS        8
 #define NUM_BUTTONS     8
 
@@ -356,9 +356,11 @@ AudioConnection          patchCord12(voice[0].lfoAenv, lfoAread1);
 AudioConnection          patchCord128(voice[0].voiceOut, 0, mix1, 0);
 AudioConnection          patchCord129(voice[1].voiceOut, 0, mix1, 1);
 AudioConnection          patchCord130(voice[2].voiceOut, 0, mix1, 2);
-AudioConnection          patchCord131(voice[3].voiceOut, 0, mix2, 0);
-AudioConnection          patchCord132(voice[4].voiceOut, 0, mix2, 1);
-AudioConnection          patchCord133(voice[5].voiceOut, 0, mix2, 2);
+AudioConnection          patchCord131(voice[3].voiceOut, 0, mix1, 3);
+AudioConnection          patchCord132(voice[4].voiceOut, 0, mix2, 0);
+AudioConnection          patchCord133(voice[5].voiceOut, 0, mix2, 1);
+AudioConnection          patchCord153(voice[6].voiceOut, 0, mix2, 2);
+AudioConnection          patchCord154(voice[7].voiceOut, 0, mix2, 3);
 
 AudioConnection          patchCord134(mix1, 0, finalMix, 0);
 AudioConnection          patchCord135(mix2, 0, finalMix, 1);
