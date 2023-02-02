@@ -53,8 +53,6 @@ uint8_t voiceOrder_Steal(void) {
 
 void doNoteOn(uint8_t v, byte note) {
 
-  #ifdef YAY_ARRAYS
-
   voice[v].noteFreq = note;
   voice[v].env.noteOn();
   voice[v].filterEnv.noteOn();
@@ -64,55 +62,6 @@ void doNoteOn(uint8_t v, byte note) {
   if (!(vs.isMonophonic)) {
     voiceOrder_Add(v);
   }
-  
-
-  #else // YAY_ARRAYS is not defined
-  
-  // if (voice == 0) {
-  //   note1freq = note;
-  //   env1.noteOn();
-  //   filterEnv1.noteOn();
-  //   lfoAenv1.noteOn();
-  //   env1on = true;
-  //   voiceOrder_Add(0);
-  // } else if (voice == 1) {
-  //   note2freq = note;
-  //   env2.noteOn();
-  //   filterEnv2.noteOn();
-  //   lfoAenv2.noteOn();
-  //   env2on = true;
-  //   voiceOrder_Add(1);
-  // } else if (voice == 2) {
-  //   note3freq = note;
-  //   env3.noteOn();
-  //   filterEnv3.noteOn();
-  //   lfoAenv3.noteOn();
-  //   env3on = true;
-  //   voiceOrder_Add(2);
-  // } else if (voice == 3) {
-  //   note4freq = note;
-  //   env4.noteOn();
-  //   filterEnv4.noteOn();
-  //   lfoAenv4.noteOn();
-  //   env4on = true;
-  //   voiceOrder_Add(3);
-  // } else if (voice == 4) {
-  //   note5freq = note;
-  //   env5.noteOn();
-  //   filterEnv5.noteOn();
-  //   lfoAenv5.noteOn();
-  //   env5on = true;
-  //   voiceOrder_Add(4);
-  // } else if (voice == 5) {
-  //   note6freq = note;
-  //   env6.noteOn();
-  //   filterEnv6.noteOn();
-  //   lfoAenv6.noteOn();
-  //   env6on = true;
-  //   voiceOrder_Add(5);
-  // }
-
-  #endif
 }
 
 void myNoteOn(byte channel, byte note, byte velocity) {
@@ -198,8 +147,6 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 
 void doNoteOff(uint8_t v) {
 
-  #ifdef YAY_ARRAYS
-
   voice[v].env.noteOff();
   voice[v].filterEnv.noteOff();
   voice[v].lfoAenv.noteOff();
@@ -207,49 +154,6 @@ void doNoteOff(uint8_t v) {
   if (!(vs.isMonophonic)) {
     voiceOrder_Remove(v);
   }
-  
-
-  #else // YAY_ARRAYS is not defined
-  
-  // if (voice == 0) {
-  //   env1.noteOff();
-  //   filterEnv1.noteOff();
-  //   lfoAenv1.noteOff();
-  //   env1on = false;
-  //   voiceOrder_Remove(0);
-  // }  if (voice == 1) {
-  //   env2.noteOff();
-  //   filterEnv2.noteOff();
-  //   lfoAenv2.noteOff();
-  //   env2on = false;
-  //   voiceOrder_Remove(1);
-  // }  if (voice == 2) {
-  //   env3.noteOff();
-  //   filterEnv3.noteOff();
-  //   lfoAenv3.noteOff();
-  //   env3on = false;
-  //   voiceOrder_Remove(2);
-  // }  if (voice == 3) {
-  //   env4.noteOff();
-  //   filterEnv4.noteOff();
-  //   lfoAenv4.noteOff();
-  //   env4on = false;
-  //   voiceOrder_Remove(3);
-  // }  if (voice == 4) {
-  //   env5.noteOff();
-  //   filterEnv5.noteOff();
-  //   lfoAenv5.noteOff();
-  //   env5on = false;
-  //   voiceOrder_Remove(4);
-  // }  if (voice == 5) {
-  //   env6.noteOff();
-  //   filterEnv6.noteOff();
-  //   lfoAenv6.noteOff();
-  //   env6on = false;
-  //   voiceOrder_Remove(5);
-  // }
-
-  #endif
 }
 
 
