@@ -10,13 +10,17 @@ void loop() {
   {
     // cross mod
     voice[v].modMix.gain(0, vs.crossMod);
-
+    
+    // Pitch bend is ignored (ie frozen in place) for voices in release stage.
+    if (voice[v].envOn) {
+      voice[v].pitchBend = pitchBend;
+    }
+    
     // voice frequencies
-    // todo: pitchBend should be ignored (ie frozen in place) for voices in release stage
-    voice[v].vcoA.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * pitchBend);
-    voice[v].vcoB.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * vs.octaveB * vs.tuneB * pitchBend);
-    voice[v].vcoC.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * vs.octaveC * vs.tuneC * pitchBend);
-    voice[v].sub.frequency(noteFreqs[voice[v].noteFreq] / 2 * vs.octave * pitchBend);
+    voice[v].vcoA.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * voice[v].pitchBend);
+    voice[v].vcoB.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * vs.octaveB * vs.tuneB * voice[v].pitchBend);
+    voice[v].vcoC.frequency(noteFreqs[voice[v].noteFreq] * vs.octave * vs.octaveC * vs.tuneC * voice[v].pitchBend);
+    voice[v].sub.frequency(noteFreqs[voice[v].noteFreq] / 2 * vs.octave * voice[v].pitchBend);
 
     // VCO mixer
     voice[v].voiceMix.gain(0, vs.vcoAvol * mainVol);

@@ -79,6 +79,7 @@ class Voice {
 
   bool envOn = false;
   int noteFreq;
+  float pitchBend = 1.0; // Can be different for each voice.
 
   Voice() {
     patchCord1 = new AudioConnection(lfoA, lfoAenv);
@@ -317,15 +318,12 @@ int8_t monoStack[MONO_STACK_SIZE];
 int8_t monoSP = 0;
 
 
-
-
 //int vol of vcos.
 float vcoVol = 0.07; // lol should be const
 float mainVol;
 
 
-
-
+// Global pitch bend, applied only to active notes.
 float pitchBend = 1.0;
 
 typedef struct { // lol pack this better, maybe also change types
