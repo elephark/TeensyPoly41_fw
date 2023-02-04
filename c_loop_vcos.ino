@@ -6,8 +6,7 @@ void loop() {
     voices = 0;
   }
 
-  for (uint8_t v = 0; v < NUM_VOICES; v++)
-  {
+  for (uint8_t v = 0; v < NUM_VOICES; v++) {
     // cross mod
     voice[v].modMix.gain(0, vs.crossMod);
     
@@ -29,34 +28,28 @@ void loop() {
     voice[v].voiceMix.gain(3, vs.Subvol * mainVol);
 
     // VCO A shape
-    if (vs.shapeA == 2)
-    {
+    if (vs.shapeA == 2) {
       voice[v].vcoA.begin(WAVEFORM_TRIANGLE_VARIABLE);
       voice[v].vcoA.amplitude(vcoVol * 1.5);
     }
-    else if (vs.shapeA == 1)
-    {
+    else if (vs.shapeA == 1) {
       voice[v].vcoA.begin(WAVEFORM_SAWTOOTH);
       voice[v].vcoA.amplitude(vcoVol);
     }
-    else // (shapeA == 0)
-    {
+    else { // (shapeA == 0)
       voice[v].vcoA.begin(WAVEFORM_PULSE);
     }
 
     // VCO B shape
-    if (vs.shapeB == 2)
-    {
+    if (vs.shapeB == 2) {
       voice[v].vcoB.begin(WAVEFORM_TRIANGLE_VARIABLE);
       voice[v].vcoB.amplitude(vcoVol * 1.5);
     }
-    else if (vs.shapeB == 1)
-    {
+    else if (vs.shapeB == 1) {
       voice[v].vcoB.begin(WAVEFORM_SAWTOOTH);
       voice[v].vcoB.amplitude(vcoVol);
     }
-    else // (shapeA == 0)
-    {
+    else { // (shapeA == 0)
       voice[v].vcoB.begin(WAVEFORM_PULSE);
     }
 

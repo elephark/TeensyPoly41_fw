@@ -193,11 +193,7 @@ void myNoteOff(byte channel, byte note, byte velocity) {
         }
       }
       break;
-
     }
-
-
-
   } else if (vs.isMonophonic == 1) { //MONOPHONIC mode
     // Don't do anything if the stack is empty.
     if (monoSP) {

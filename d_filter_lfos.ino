@@ -1,6 +1,5 @@
 
-for (uint8_t v = 0; v < NUM_VOICES; v++)
-{
+for (uint8_t v = 0; v < NUM_VOICES; v++) {
   // filter
   voice[v].filter.frequency(vs.cut);
   voice[v].filter.resonance(vs.res);
@@ -12,13 +11,11 @@ for (uint8_t v = 0; v < NUM_VOICES; v++)
   voice[v].dc.amplitude(vs.filtAmt);
 
   // filter mode
-  if (vs.filterMode == 1)
-  {
+  if (vs.filterMode == 1) {
     voice[v].filterMode.gain(0, 1);
     voice[v].filterMode.gain(1, 0);
   }
-  else // (filterMode == 0)
-  {
+  else { // (filterMode == 0)
     voice[v].filterMode.gain(0, 0);
     voice[v].filterMode.gain(1, 1);
   }
@@ -35,7 +32,7 @@ for (uint8_t v = 0; v < NUM_VOICES; v++)
   // LFO shape switch
   if (vs.lfoAshape == 2)      { voice[v].lfoA.begin(WAVEFORM_SAMPLE_HOLD); }
   else if (vs.lfoAshape == 1) { voice[v].lfoA.begin(WAVEFORM_SAWTOOTH_REVERSE); }
-  else                     { voice[v].lfoA.begin(WAVEFORM_SINE); } // (lfoAShape == 0)
+  else                        { voice[v].lfoA.begin(WAVEFORM_SINE); } // (lfoAShape == 0)
 
   // LFO B params
   voice[v].lfoB.amplitude(vs.lfoBamp);
@@ -82,5 +79,4 @@ if (vs.lfoAdest == 0) { // lfo - pitch
     voice[v].patchCord6->disconnect(); //filter
   }
   patchCord12.connect(); //lfoAread
-  
 }
