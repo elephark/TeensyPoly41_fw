@@ -69,14 +69,10 @@ void myNoteOn(byte channel, byte note, byte velocity) {
   if ((channel != midiChannel) || (note > 127)) { return; }
 
   if (vs.isMonophonic == 0) { //POLYPHONIC mode
-//    AudioEffectEnvelope *tmpEnv[NUM_VOICES] = {&env1, &env2, &env3, &env4, &env5, &env6};
-//    bool envOn[NUM_VOICES] = {env1on, env2on, env3on, env4on, env5on, env6on};
     switch (voices) {
       case 0 ... (NUM_VOICES - 1): {
         bool voiceAllocSuccess = false;
         for (uint8_t i = 0; (i < NUM_VOICES && voiceAllocSuccess == false); i++) {
-//          if (!(tmpEnv[voiceOrder[i]]->isActive())) {
-//          if (!envOn[voiceOrder[i]]) {
           if (!(voice[voiceOrder[i]].envOn)) {
             doNoteOn(voiceOrder[i], note);
             voiceAllocSuccess = true; // break out
@@ -85,9 +81,7 @@ void myNoteOn(byte channel, byte note, byte velocity) {
         // If that wasn't enough, steal an off note that still has a running envelope (probably in the release stage)
         if (!voiceAllocSuccess) {
           for (uint8_t i = 0; (i < NUM_VOICES && voiceAllocSuccess == false); i++) {
-//            if (!(tmpEnv[voiceOrder[i]]->isActive())) {
             if (!(voice[voiceOrder[i]].env.isActive())) {
-//            if (!envOn[voiceOrder[i]]) {
               doNoteOn(voiceOrder[i], note);
               voiceAllocSuccess = true; // break out
             }
@@ -185,9 +179,7 @@ void myNoteOff(byte channel, byte note, byte velocity) {
   if (vs.isMonophonic == 0) { //POLYPHONIC mode
     switch (voices) {
     case 1 ... NUM_VOICES:
-//        int freqs[NUM_VOICES] = {note1freq, note2freq, note3freq, note4freq, note5freq, note6freq}; 
       for (uint8_t i = 0; i < voices; i++) { // look through voices in the order they're used
-//          if (freqs[voiceOrder[i]] == note) {
         if (voice[voiceOrder[i]].noteFreq == note) {
           doNoteOff(voiceOrder[i]);
         }
