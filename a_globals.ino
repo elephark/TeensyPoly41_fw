@@ -262,12 +262,6 @@ int sw_lfoDestLo;
 
 int btn_memActive;
 int btn_memStore;
-int btn_mem6;      // lol maybe array this
-int btn_mem5;
-int btn_mem4;
-int btn_mem3;
-int btn_mem2;
-int btn_mem1;
 int btn_mem[6];    // lol magic number
 
 bool memJustLoaded;
