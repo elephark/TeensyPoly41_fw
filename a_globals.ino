@@ -304,7 +304,7 @@ const float noteFreqs[128] = {
   8372.018, 8869.844, 9397.273, 9956.063, 10548.08, 11175.3, 11839.82, 12543.85
 };
 
-
+// How many voices are currently in use?
 int voices;
 
 
