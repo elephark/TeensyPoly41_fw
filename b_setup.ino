@@ -11,9 +11,13 @@ void setup() {
 //  usbMIDI.begin();
 //  usbMIDI.setHandleNoteOn(myNoteOn);
 //  usbMIDI.setHandleNoteOff(myNoteOff);
+//  usbMIDI.setHandlePitchBend(myPitchBend);
+
   MIDI.setHandleNoteOn(myNoteOn);
   MIDI.setHandleNoteOff(myNoteOff);
   MIDI.setHandlePitchBend(myPitchBend);
+  // todo: mod wheel messages
+
   MIDI.begin(MIDI_CHANNEL_OMNI);
 
 
