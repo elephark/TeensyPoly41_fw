@@ -1,4 +1,4 @@
-if (millis() - prevTimer > timer) {
+if (millis() - paramTimer > paramTimerInterval) {
 
   // Main volume
   mainVol = (float)pot_mainVol / 1024;
@@ -685,5 +685,5 @@ if (millis() - prevTimer > timer) {
     memJustLoaded = false;
   }
   
-  prevTimer = millis();
+  paramTimer = millis();
 }

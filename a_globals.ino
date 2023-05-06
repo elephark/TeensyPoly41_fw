@@ -408,10 +408,10 @@ float outGain = 0.8; // lol make this const?
 //turncheck
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 float thresh = 10;
-float thresh2 = 20;
+float thresh2 = 20; // lol rename this
 
-unsigned long timer = 6;
-unsigned long prevTimer;
+unsigned long paramTimerInterval = 6; // lol magic number
+unsigned long paramTimer;
 
 
 int tuneBpot;
