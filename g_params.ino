@@ -1,12 +1,8 @@
 if (millis() - prevTimer > timer) {
 
-
+  // Main volume
   mainVol = (float)pot_mainVol / 1024;
-//  preset = analogRead(A24) / 190;
-//  preset = 0; // lol debug
 
-//  bend = 1 + ((float)analogRead(A0) / 1023 / 4.3) - 0.12;
-//  bend = 1; // lol debug
 
   //main octave
   if (sw_mainOctLo == 0) {
@@ -185,8 +181,6 @@ if (millis() - prevTimer > timer) {
       Serial.println("octave B switch");
     }
 
-
-
     //octave vco C
     if (sw_oscCOctLo == 0) {
       octCsw = 0;
@@ -209,10 +203,6 @@ if (millis() - prevTimer > timer) {
       oldOctCsw = octCsw;
       Serial.println("octave C switch");
     }
-
-
-
-
 
 
 
@@ -242,8 +232,6 @@ if (millis() - prevTimer > timer) {
       Serial.println("shape A switch");
     }
 
-
-
     //Shape B
     if (sw_oscBShapeLo == 0) {
       shapeBsw = 0;
@@ -267,9 +255,6 @@ if (millis() - prevTimer > timer) {
       Serial.println("shape B switch");
     }
 
-
-
-
     //Vco C shape
     shapeCpot = pot_oscCShape;
     
@@ -280,7 +265,6 @@ if (millis() - prevTimer > timer) {
       oldShapeCpot = shapeCpot; // + thresh2 / 2;
       Serial.println("shape C turn");
     }
-
 
 
 
@@ -330,7 +314,6 @@ if (millis() - prevTimer > timer) {
 
 
 
-
     ///////////// VOLUMES VOLUMES /////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -343,7 +326,6 @@ if (millis() - prevTimer > timer) {
       oldVolApot = volApot; // + thresh2 / 2;
       Serial.println("volA turn");
     }
-
 
     volBpot = pot_oscBVol;
         
@@ -374,6 +356,8 @@ if (millis() - prevTimer > timer) {
       oldVolSubpot = volSubpot; // + thresh2 / 2;
       Serial.println("vol sub turn");
     }
+
+
 
     //////////// FILTER FILTER ////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -441,8 +425,6 @@ if (millis() - prevTimer > timer) {
       oldFAmtpot = fAmtpot; // + thresh2 / 2;
       Serial.println("filter Amt turn");
     }
-
-
 
     //FilterMode
     if (sw_filtMode == 0) {
@@ -594,7 +576,6 @@ if (millis() - prevTimer > timer) {
     }
 
 
-
     //lfoA shape
     if (sw_lfoShapeLo == 0) {
       lfoShapesw = 0;
@@ -645,9 +626,6 @@ if (millis() - prevTimer > timer) {
 
 
 
-
-
-
     //////////////// FX FX FX FX //////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -678,7 +656,6 @@ if (millis() - prevTimer > timer) {
     }
 
 
-
     //Reverb
     revMixpot = pot_revAmt;
         
@@ -705,7 +682,6 @@ if (millis() - prevTimer > timer) {
   if (memJustLoaded) {
     // Note: If we just entered memory mode, we need to reset our memory of what the knob positions were.
     // Otherwise we wind up with goofy glitching of a sort I'm not really in the mood for.
-//    Serial.println("memJustLoaded was true, setting it false now.");
     memJustLoaded = false;
   }
   
