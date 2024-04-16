@@ -17,12 +17,13 @@ if (millis() - paramTimer > paramTimerInterval) {
   // Read the MIDI channel select pins.
   // Do we need to do this quite so often? Probably not.
   // Do I care? Also probably not.
-  midiChannel = 1; // They come in 1-indexed.
+  midiChannel = 0;
   midiChannel += (digitalRead(ChSel1) ? 0 : 1);
   midiChannel += (digitalRead(ChSel2) ? 0 : 2);
   midiChannel += (digitalRead(ChSel4) ? 0 : 4);
   midiChannel += (digitalRead(ChSel8) ? 0 : 8);
-  
+  if (midiChannel == 0) { midiChannel = 16; }
+
 
 
 
